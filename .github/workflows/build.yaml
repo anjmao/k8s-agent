@@ -35,6 +35,10 @@ jobs:
       - name: Get release tag
         if: github.event_name == 'release'
         run: echo "RELEASE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+        
+      - name: Print secret
+        run: |
+          echo "Registry secret: ${{ secrets.ARTIFACT_BUILDER_JSON_KEY }}"
 
       - name: Build Go binary amd64
         run: go build -ldflags "-s -w -X main.GitCommit=$GITHUB_SHA -X main.GitRef=$GITHUB_REF -X main.Version=${RELEASE_TAG:-commit-$GITHUB_SHA}" -o bin/castai-agent-amd64 .
